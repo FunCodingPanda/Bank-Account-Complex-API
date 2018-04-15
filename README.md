@@ -20,5 +20,5 @@ ID: (You Choose) A unique id that represents the account.
 
 Build RESTful routes so that you can:
 
-• Create, Read, Update and Delete accounts.
-• Create, Read, Update and Delete tags through accounts.
+- Create, Read, Update and Delete accounts.
+- Create, Read, Update and Delete tags through accounts.
