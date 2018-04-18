@@ -58,47 +58,46 @@ getById = (accountId, id) => {
   }
 }
 //-------------------------------------------------------------------- To do list
-updatedTransaction = (id, body) => {
-  const transaction = helpers.transaction()
-  const account = helpers.account()
+updateTransaction = (accountId, transactionId, body) => {
+  const transaction = helpers.transaction(accountId, transactionId)
+  const account = helpers.account(accountId)
   const accounts = helpers.readDatabase()
 
-  if (!account || !transaction || !body.transaction.title || !body.transaction.amount || !body.transaction.pending ) {
-    let response = {
+  if (!account || !transaction || !body) {
+    return {
       status: 404, 
       message: `Account and Transaction were not found, title, amount or pending is/are not there or updated properly`,
       errors: `Not found or required`
     }
   } else {
     const updatedTransaction = {
-      id, 
-      title: body.transaction.title,
-      amount: body.transaction.amount, 
-      pending: body.description.pending,
+      id: transactionId, 
+      title: body.title || transaction.title,
+      amount: body.amount || transaction.amount, 
+      pending: body.pending || transaction.pending,
     }
-  response = updatedAccount
-  const TransactionIndex = accounts.indexOf(transaction)
-  accounts[TransactionIndex] = updatedTransaction
-  helpers.writeDatabase()
+    const transactionIndex = account.transactions.findIndex(t => t.id == transactionId)
+    const accountIndex = accounts.findIndex(a => a.id == accountId)
+    accounts[accountIndex].transactions[transactionIndex] = updatedTransaction
+    helpers.writeDatabase(accounts)
+    return updatedTransaction
   }
   return response
 }
 
-deleteTransaction = (id) => {
+deleteTransaction = (accountId, transactionId) => {
   const accounts = helpers.readDatabase()
-  const transaction = helpers.transaction()
   const errors = []
   
   for (let i = 0; i < accounts.length; i++) {
-    if (accounts.transaction[i].id == id) {
-      const foundAccountTransaction = accounts.transaction[i];
-      accounts.transaction.splice(i, 1);
-      helpers.writeDatabase(transaction)
-      return `Account Transaction is now deleted`
+    if (accounts[i].id == accountId) {
+      accounts[i].transactions = accounts[i].transactions.filter(t => t.id != transactionId)
+      helpers.writeDatabase(accounts)
+      return {message: `Account Transaction is now deleted`}
     }
   }
   errors.push('Could not delete account transaction')
   return { errors }
 }
   
-module.exports = { create, getAll, getById, updatedTransaction, deleteTransaction}
+module.exports = { create, getAll, getById, updateTransaction, deleteTransaction}

@@ -56,7 +56,7 @@ updateAccount = (id, body) => {
   const account = helpers.account(id)
   const accounts = helpers.readDatabase()
 
-  if (!account || !body.name || !body.bankName || !body.description ) {
+  if (!account || !body) {
     return {
       status: 404, 
       message: `Account was not found, name, bankName or description is/are not there or updated properly`,
@@ -65,9 +65,9 @@ updateAccount = (id, body) => {
   } else {
     const updatedAccount = {
       id, 
-      name: body.name,
-      bankName: body.bankName, 
-      description: body.description,
+      name: body.name || account.name,
+      bankName: body.bankName || account.bankName,
+      description: body.description || account.description,
       transactions: account.transactions.concat(body.transactions || [])
     }
     const accountIndex = accounts.findIndex(a => a.id === account.id)
@@ -86,7 +86,7 @@ deleteAccount = (id) => {
       const foundAccount = accounts[i];
       accounts.splice(i, 1);
       helpers.writeDatabase(accounts)
-      return `Account is now deleted`
+      return {message: `Account is now deleted`}
     }
   }
   errors.push('Could not delete account')

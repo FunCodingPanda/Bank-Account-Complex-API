@@ -45,9 +45,9 @@ getById = (req, res, next) => {
 
 updateAccount = (req, res, next) => {
   const id = req.params.id
-  const updatedAccount = model.updatedAccount(id, req.body)
+  const updatedAccount = model.updateAccount(id, req.body)
 
-  if (updatedCAccount.errors) {
+  if (updatedAccount.errors) {
     return next({
       status: 404,
       message: ``,
@@ -68,11 +68,11 @@ deleteAccount = (req, res, next) => {
   const id = req.params.id
   const deletedAccount = model.deleteAccount(id)
 
-  if (deletedAccount.error) {
+  if (deletedAccount.errors) {
     return next({
       status: 404,
       message: `Was not able to delete account`,
-      error: deletedAccount.error
+      error: deletedAccount.errors
     })
   }
 

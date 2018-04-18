@@ -47,7 +47,7 @@ getById = (req, res, next) => {
 
 
 updateTransaction = (req, res, next) => {
-  const transactions = model.updateTransaction(req.params.id, req.body, req.params.transactionId)
+  const transactions = model.updateTransaction(req.params.id, req.params.transactionId, req.body)
 
   if (transactions.errors) {
     return next({
@@ -61,16 +61,16 @@ updateTransaction = (req, res, next) => {
 
 
 deleteTransaction = (req, res, next) => {
-  const transactions = model.deleteTransaction(req.params.id, req.params.transactionssId)
+  const result = model.deleteTransaction(req.params.id, req.params.transactionId)
 
-  if (transactions.errors) {
+  if (result.errors) {
     return next({
       status: 404,
       message: `Not Found`,
-      errors: error
+      errors: result.errors
     })
   }
-  res.status(200).json({ transactions })
+  res.status(200).json({ result })
 }
 
 

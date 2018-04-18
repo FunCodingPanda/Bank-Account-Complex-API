@@ -11,15 +11,6 @@ app.use(bodyParser.json()) // any request would be converted into JSON
 const accountsRoutes = require('./src/routes/accounts')
 app.use('/accounts', accountsRoutes) 
 
-// app.use((err, req, res, next) => {
-//   const status = err.status || 500
-//   res.status(status).json({ error: err })
-// })
-
-// app.use((req, res, next) => {
-//   res.status(404).json({ error: { message: 'Not found' }})
-// })
-
 app.use((err, req, res, next) => {
   console.error(err.stack) // Log the stacktrace of any errors that happen
   const status = err.status || 500
